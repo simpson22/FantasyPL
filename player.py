@@ -19,7 +19,8 @@ for player in fplPlayerData:
 # Sort our list of players by the new Pts/£, placing into a new list
 u_PtsPPound = sorted(playerListArray, key=lambda a: a['u_Pts/£'], reverse=True)
 
-print(playerListArray)
-print(u_PtsPPound)
+for player in u_PtsPPound[:5]:
+    print(player)
+
 
 print('player ran successfully')
