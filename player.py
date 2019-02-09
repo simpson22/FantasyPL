@@ -25,9 +25,10 @@ for player in fplPlayerData:
 # Sort our list of players by the new Pts/£, placing into a new list
 u_PlayerInfoSorted = sorted(u_PlayerListArray, key=lambda a: a['u_Pts/£'], reverse=True)
 
-if __name__ == 'main':
+if __name__ == '__main__':
     for player in u_PlayerInfoSorted[:5]:
         print(player)
-        print('player ran successfully')
+    print(len(u_PlayerListArray), 'Players stored')
+    print('player ran successfully')
 
 

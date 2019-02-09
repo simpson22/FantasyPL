@@ -19,7 +19,7 @@ else:
     else:
         success = 1
 
-if __name__ == 'main':
+if __name__ == '__main__':
     if success:
         print('scraper ran successfully')
     else:

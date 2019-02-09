@@ -4,19 +4,31 @@ import numpy as np
 print(pl.u_PlayerListArray)
 
 
-def remove_inactive(player_array):
-    active_players = []
+def filter_players(player_array, attribute, constraint, condition='eq'):
+    # Function which removes players based on arguments
+    filtered_players = []
     number_excluded = 0
     for players in player_array:
-        if players['status'] == 'a':
-            active_players.append(dict(players))
+        if type(constraint) is str or condition == 'eq':
+            if players[attribute] == constraint:
+                filtered_players.append(dict(players))
+            else:
+                number_excluded += 1
+        elif condition == 'gt':
+            if players[attribute] >= constraint:
+                filtered_players.append(dict(players))
+            else:
+                number_excluded += 1
         else:
-            number_excluded += 1
-    print(number_excluded, 'inactive players removed')
-    return active_players
+            if players[attribute] <= constraint:
+                filtered_players.append(dict(players))
+            else:
+                number_excluded += 1
+    print(number_excluded, 'removed based on their', attribute, 'and', len(filtered_players), 'remain')
+    return filtered_players
 
 
-availablePlayers = remove_inactive(pl.u_PlayerListArray)
+availablePlayers = filter_players(pl.u_PlayerListArray, 'element_type', 2)
 budget = 100
 squadLimit = 11
 teamLimit = 3
