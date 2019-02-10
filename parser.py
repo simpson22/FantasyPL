@@ -13,4 +13,5 @@ for filename in fplObjectList:
     with open('data\\' + filename + '.json', 'w') as write_file:
         json.dump(fplData[filename], write_file)
 
-print('parser ran successfully')
+if __name__ == '__main__':
+    print('parser ran successfully')

@@ -1,10 +1,8 @@
 import player as pl
-import numpy as np
-
-print(pl.u_PlayerListArray)
+import re
 
 
-def filter_players(player_array, attribute, constraint, condition='eq'):
+def filter_players(player_array, attribute, condition='eq', constraint=None):
     # Function which removes players based on arguments
     filtered_players = []
     number_excluded = 0
@@ -15,12 +13,12 @@ def filter_players(player_array, attribute, constraint, condition='eq'):
             else:
                 number_excluded += 1
         elif condition == 'gt':
-            if players[attribute] >= constraint:
+            if int(players[attribute]) >= constraint:
                 filtered_players.append(dict(players))
             else:
                 number_excluded += 1
         else:
-            if players[attribute] <= constraint:
+            if int(players[attribute]) <= constraint:
                 filtered_players.append(dict(players))
             else:
                 number_excluded += 1
@@ -28,28 +26,29 @@ def filter_players(player_array, attribute, constraint, condition='eq'):
     return filtered_players
 
 
-availablePlayers = filter_players(pl.u_PlayerListArray, 'element_type', 2)
-budget = 100
-squadLimit = 11
-teamLimit = 3
-positionLimits = {1: 1, 2: 5, 3: 5, 4: 3}
-attributes = ['id',
-              'total_points',
-              'now_cost',
-              'team_code',
-              'element_type', ]
+def check_player_attributes(player_array):
+    valid_attributes = []
+    for attributes in player_array[0]:
+        valid_attributes.append(attributes)
+    return valid_attributes
 
-x = np.zeros((len(availablePlayers), len(attributes)), dtype=np.float)
-pl = 0
-at = 0
 
-for players in availablePlayers:
-    for values in attributes:
-        x[pl, at] = (players[values])
-        at += 1
-    pl += 1
-    at = 0
+def filter_players_input(player_array):
+    user_filter = []
+    valid_attributes = check_player_attributes(player_array)
+    valid_conditions = ['eq', 'lt', 'gt', ]
+    while len(user_filter) != 3:
+        print('Please input your filter options selecting a player attribute, the condition and constraint:')
+        print('Valid Attributes are:', valid_attributes, '\n Valid Conditions are:', valid_conditions, sep='\n')
+        print('e.g. status eq a, or, now_cost gt 50')
+        user_filter = [str(x) for x in input().split()]
+        if re.search('[0-9]', user_filter[2]) is not None:
+            user_filter[2] = float(user_filter[2])
+    else:
+        return user_filter
 
-np.savetxt('data\\array.csv', x, delimiter=',', fmt='%.3d')
 
-print('team_selector ran successfully')
+if __name__ == '__main__':
+    uFilter = filter_players_input(pl.u_PlayerListArray)
+    filter_players(pl.u_PlayerListArray, uFilter[0], uFilter[1], uFilter[2])
+    print('team_selector ran successfully')
