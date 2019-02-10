@@ -2,7 +2,7 @@ import player as pl
 import re
 
 
-def filter_players(player_array, attribute, condition='eq', constraint=None):
+def filter_player_array(player_array, attribute, condition='eq', constraint=None):
     # Function which removes players based on arguments
     filtered_players = []
     number_excluded = 0
@@ -48,7 +48,13 @@ def filter_players_input(player_array):
         return user_filter
 
 
+def filter_players(player_array):
+    user_filter = filter_players_input(player_array)
+    user_players = filter_player_array(player_array, user_filter[0], user_filter[1], user_filter[2])
+    return user_players
+
+
 if __name__ == '__main__':
     uFilter = filter_players_input(pl.u_PlayerListArray)
-    filter_players(pl.u_PlayerListArray, uFilter[0], uFilter[1], uFilter[2])
+    filter_player_array(pl.u_PlayerListArray, uFilter[0], uFilter[1], uFilter[2])
     print('team_selector ran successfully')
