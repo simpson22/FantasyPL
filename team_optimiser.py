@@ -13,7 +13,6 @@ playerDEF = {}
 playerMID = {}
 playerFWD = {}
 playerVariables = {}
-playerTeamsFinder = {}
 
 while True:
     print(len(myTeam), 'Candidates remaining\nWould you like to filter the candidate pool y/n')
@@ -22,11 +21,6 @@ while True:
         myTeam = ts.filter_players(pl.u_PlayerListArray)
     else:
         break
-
-for i in range(19):
-    team = i + 1
-    teamVar = 'playerTeam' + str(team)
-    playerTeamsFinder[team] = teamVar
 
 for players in myTeam:
     playerIds.append(players['id'])
@@ -44,10 +38,6 @@ for players in myTeam:
         playerMID[players['id']] = 1
     else:
         playerFWD[players['id']] = 1
- #   for team in playerTeamsFinder:
-  #      if players['team_code'] == team:
-   #         playerTeam
-
 
 
 problem = LpProblem('The FPL Team Problem', LpMaximize)
@@ -63,7 +53,7 @@ problem += lpSum([playerMID[i]*playerVariables[i] for i in playerIds]) <= 5
 problem += lpSum([playerFWD[i]*playerVariables[i] for i in playerIds]) >= 1
 problem += lpSum([playerFWD[i]*playerVariables[i] for i in playerIds]) <= 3
 
-problem += lpSum([playerCost[i]*playerVariables[i] for i in playerIds]) <= 1000
+problem += lpSum([playerCost[i]*playerVariables[i] for i in playerIds]) <= 850
 
 problem += lpSum([playerVariables[i] for i in playerIds]) == 11
 
