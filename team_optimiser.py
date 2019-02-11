@@ -71,7 +71,7 @@ for team in allTeamArray:
     teamArray = allTeamArray[team]
     problem += lpSum([teamArray[i] * playerVariables[i] for i in playerIds]) <= 3
 
-problem += lpSum([playerCost[i]*playerVariables[i] for i in playerIds]) <= 850  # Less than or equal to 85M budget
+problem += lpSum([playerCost[i]*playerVariables[i] for i in playerIds]) <= 873  # Less than or equal to 85M budget
 
 problem += lpSum([playerVariables[i] for i in playerIds]) == 11  # 11 Players
 
