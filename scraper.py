@@ -7,31 +7,33 @@ modes = dict(raw_data='bootstrap-static',
              fixtures='fixtures', )
 
 
-def fantasy_request(mode='bootstrap-static', element=None):
-
-    if element is not None:
-        file_element = element
+def fantasy_request(mode='bootstrap-static', element=''):
+    data = None
+    if element is not '':
         element = '/' + element
-    else:
-        element = ''
-        file_element = ''
     try:
-        request_data = requests.get('https://fantasy.premierleague.com/drf/' + modes[mode] + element)
-        request_data.raise_for_status()
+        data = requests.get('https://fantasy.premierleague.com/drf/' + modes[mode] + element)
+        data.raise_for_status()
     except requests.exceptions.RequestException as e:
         print('Could not request data:', e, sep='\n')
         success = 0
     else:
-        # Open and write to a raw_data.json file, dumping request object as json
-        try:
-            with open('data\\' + mode + '\\' + mode + file_element + '.json', 'w') as write_file:
-                json.dump(request_data.json(), write_file)
-        except EnvironmentError as e:
-            print('Could not write ' + mode + ' file', e, sep='\n')
-            success = 0
-        else:
-            print(mode + ' successfully extracted')
-            success = 1
+        success = 1
+        print(mode + ' successfully requested')
+    return success, data
+
+
+def write_file(mode, element='', write_data=None):
+    file_location = 'data\\' + mode + '\\' + mode + element + '.json'
+    try:
+        with open(file_location, 'w') as file:
+                json.dump(write_data.json(), file)
+    except EnvironmentError as e:
+        print('Could not write to ' + file_location, e, sep='\n')
+        success = 0
+    else:
+        print(file_location + ' successfully saved')
+        success = 1
     return success
 
 
@@ -39,8 +41,9 @@ if __name__ == '__main__':
     print('Please enter one of the following modes')
     print(modes)
     kwargs = [str(x) for x in input().split()]
-    status = fantasy_request(*kwargs)
-    if status:
+    request_status, request_data = fantasy_request(*kwargs)
+    write_status = write_file(*kwargs, write_data=request_data)
+    if request_status and write_status:
         print('scraper ran successfully')
     else:
         print('scraper ran with errors')
