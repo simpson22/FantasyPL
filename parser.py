@@ -51,8 +51,8 @@ readLocations = find_read_modes()
 if __name__ == '__main__':
     print('Select a file to analyse\n' + str(readLocations.keys()))
     fplData = read_json_data(readLocations[input()])
-    fplObjects, isObject = find_json_objects(fplData)
-    if isObject == 1:
+    fplObjects, isObjects = find_json_objects(fplData)
+    if isObjects == 1:
         print('Select an object to inspect\n' + str(fplObjects))
         fplItem = show_json_item(input(), fplData)
         print(fplItem)
