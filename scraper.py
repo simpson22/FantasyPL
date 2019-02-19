@@ -2,9 +2,9 @@
 import requests
 import json
 
-modes = dict(raw_data='bootstrap-static',
-             player='element-summary',
-             fixtures='fixtures', )
+requestModes = dict(raw_data='bootstrap-static',
+                    player='element-summary',
+                    fixtures='fixtures', )
 
 
 def fantasy_request(mode='bootstrap-static', element=''):
@@ -13,7 +13,7 @@ def fantasy_request(mode='bootstrap-static', element=''):
     if element is not '':
         element = '/' + element
     try:
-        data = requests.get('https://fantasy.premierleague.com/drf/' + modes[mode] + element)
+        data = requests.get('https://fantasy.premierleague.com/drf/' + requestModes[mode] + element)
         data.raise_for_status()
     except requests.exceptions.RequestException as e:
         print('Could not request data:', e, sep='\n')
@@ -42,11 +42,11 @@ def write_json_file(mode, element='', write_data=None):
 
 if __name__ == '__main__':
     print('Please enter one of the following modes')
-    print(modes)
-    kwargs = [str(x) for x in input().split()]
-    request_status, request_data = fantasy_request(*kwargs)
-    write_status = write_json_file(*kwargs, write_data=request_data)
-    if request_status and write_status:
+    print(requestModes)
+    inputMode = [str(x) for x in input().split()]
+    requestStatus, requestData = fantasy_request(*inputMode)
+    writeStatus = write_json_file(*inputMode, write_data=requestData)
+    if requestStatus and writeStatus:
         print('scraper ran successfully')
     else:
         print('scraper ran with errors')
