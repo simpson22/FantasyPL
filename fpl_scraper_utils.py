@@ -10,20 +10,19 @@ requestModes = dict(raw_data='bootstrap-static',
 def fantasy_request(mode='bootstrap-static', element=''):
     """Provide a mode, and element if applicable, requests the data from FPL API, return success code and data."""
     if element is not '':
-        element = str(element)
-        web_element = '/' + element
+        element = '/' + str(element)
     try:
-        data = requests.get('https://fantasy.premierleague.com/drf/' + requestModes[mode] + web_element)
+        data = requests.get('https://fantasy.premierleague.com/drf/' + requestModes[mode] + element)
         data.raise_for_status()
+        print('{}{} successfully requested'.format(mode, element))
+        return data
+    except KeyError as e:
+        print('Incorrect key {} provided'.format(e))
     except requests.exceptions.RequestException as e:
-        print('Could not request data:', e, sep='\n')
-        return 0
-    else:
-        print(mode + element + ' successfully requested')
-    return data
+        print('Could not request data: \n{}'.format(e))
 
 
-def write_json_file(mode, element='', write_data=None):
+def write_json_file(write_data, mode=None, element=''):
     """Provide a mode and element if applicable, writes the FPL API json format to a standard file location
      returning status"""
     element = str(element)
@@ -31,21 +30,17 @@ def write_json_file(mode, element='', write_data=None):
     try:
         with open(file_location, 'w') as file:
                 json.dump(write_data.json(), file)
+        print('{} successfully saved'.format(file_location))
     except EnvironmentError as e:
-        print('Could not write to ' + file_location, e, sep='\n')
-        return 0
-    else:
-        print(file_location + ' successfully saved')
-    return 1
+        print('Could not write to {}\n{}'.format(file_location, e))
+    except AttributeError as e:
+        print('Write data is not recognised as json: {}'.format(e))
 
 
 if __name__ == '__main__':
-    print('Please enter one of the following modes')
-    print(requestModes)
+    print('Please enter one of the following modes\n{}'.format(str(requestModes)))
     inputMode = [str(x) for x in input().split()]
     requestData = fantasy_request(*inputMode)
-    writeStatus = write_json_file(*inputMode, write_data=requestData)
-    if requestData and writeStatus:
-        print('scraper ran successfully')
-    else:
-        print('scraper ran with errors')
+    write_json_file(requestData, *inputMode)
+    print('scraper ran successfully')
+
