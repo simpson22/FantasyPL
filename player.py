@@ -1,7 +1,11 @@
-import json
+import fpl_parser_utils as pu
+import fpl_scraper_utils as su
 
 # Load the elements data and initialise an array and list
-fplPlayerData = json.load(open('data\\elements.json', 'r'))
+fplData = pu.read_json_data('raw_data')
+su.write_json_file(fplData['elements'], 'elements')
+
+fplPlayerData = pu.read_json_data('elements')
 playerInfo = {}
 u_PlayerListArray = []
 

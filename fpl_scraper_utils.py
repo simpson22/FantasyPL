@@ -15,7 +15,7 @@ def fantasy_request(mode='raw_data', element=''):
         element: str() or int() referring to API element if iterable.
         
     Returns:
-        Response object, expected to contain json Data.
+        Response object in json format.
     """
     if element is not '':
         element = '/' + str(element)
@@ -23,7 +23,7 @@ def fantasy_request(mode='raw_data', element=''):
         data = requests.get('https://fantasy.premierleague.com/drf/{}{}'.format(requestModeMapping[mode], element))
         data.raise_for_status()
         print('{}{} successfully requested'.format(mode, element))
-        return data
+        return data.json()
     except KeyError as e:
         print('Incorrect key {} provided'.format(e))
     except requests.exceptions.RequestException as e:
@@ -42,7 +42,7 @@ def write_json_file(write_data, mode=None, element=''):
     file_location = 'data\\{0}\\{0}{1}.json'.format(mode, element)
     try:
         with open(file_location, 'w') as file:
-                json.dump(write_data.json(), file)
+                json.dump(write_data, file)
         print('{} successfully saved'.format(file_location))
     except EnvironmentError as e:
         print('Could not write to {}\n{}'.format(file_location, e))
