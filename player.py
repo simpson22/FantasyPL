@@ -1,12 +1,22 @@
-import json
+import fpl_parser_utils as pu
+import fpl_scraper_utils as su
 
 # Load the elements data and initialise an array and list
-fplPlayerData = json.load(open('data\\elements.json', 'r'))
+fplData = pu.read_json_data('raw_data')
+su.write_json_file(fplData['elements'], 'elements')
+
+fplPlayerData = pu.read_json_data('elements')
 playerInfo = {}
-playerListArray = []
+u_PlayerListArray = []
 
 # List the data points we are interested in extracting
-interestedKeys = ['id', 'web_name', 'now_cost', 'total_points', 'element_type']
+interestedKeys = ['id',
+                  'web_name',
+                  'team_code',
+                  'status',
+                  'element_type',
+                  'now_cost',
+                  'total_points', ]
 
 # For each player in the fpl player data, and for each key in interested keys add the data to our dictionary,
 # create a new data point Pts/£ and append this player dictionary to our playerListArray
@@ -14,13 +24,15 @@ for player in fplPlayerData:
     for keys in interestedKeys:
         playerInfo[keys] = player[keys]
     playerInfo['u_Pts/£'] = round(playerInfo['total_points'] / playerInfo['now_cost'] * 10, 2)
-    playerListArray.append(dict(playerInfo))
+    u_PlayerListArray.append(dict(playerInfo))
 
 # Sort our list of players by the new Pts/£, placing into a new list
-u_PtsPPound = sorted(playerListArray, key=lambda a: a['u_Pts/£'], reverse=True)
+u_PlayerInfoSorted = sorted(u_PlayerListArray, key=lambda a: a['u_Pts/£'], reverse=True)
 
-for player in u_PtsPPound[:5]:
-    print(player)
+if __name__ == '__main__':
+    for player in u_PlayerInfoSorted[:5]:
+        print(player)
+    print(len(u_PlayerListArray), 'Players stored')
+    print('player ran successfully')
 
 
-print('player ran successfully')
